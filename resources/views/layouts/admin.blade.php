@@ -9,9 +9,9 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
+        <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
         <style>
-            ```css
+            
 body{
     margin:0;
     background:#f1f5f9;
@@ -162,13 +162,12 @@ body{
 .table-responsive{
     overflow-x:auto;
 }
-```
+
     
 
-        </style>
+</style>
     </head>
-
-    <body>
+<body class="admin-dashboard">
         <!-- Sidebar -->
 
         <div class="sidebar" id="sidebar">

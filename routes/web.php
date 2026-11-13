@@ -11,6 +11,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AuthController;
 use App\Models\Notification;
+use App\Http\Controllers\NotificationController;
+
 /*
 |--------------------------------------------------------------------------
 | Public Routes
@@ -23,8 +25,13 @@ Route::get('/about', [HomeController::class,'about'])->name('about');
 
 Route::get('/courses', [CourseController::class,'index'])->name('courses');
 
-Route::get('/course/{id}', [CourseController::class,'show'])
+// Route::get('/course/{id}', [CourseController::class,'show'])
+//     ->name('course.details');
+
+
+Route::get('/course-details/{id}', [HomeController::class, 'courseDetails'])
     ->name('course.details');
+
 
 Route::get('/contact', [ContactController::class,'index'])
     ->name('contact');
@@ -176,10 +183,20 @@ Route::middleware(['admin'])->group(function () {
         [AdminController::class,'categories'])
         ->name('admin.categories');
 
+         Route::get('/admin/notifications/count',
+            [NotificationController::class, 'count']
+        )->name('admin.notifications.count');
+
+        Route::get('/notifications/count', [NotificationController::class, 'count'])
+            ->name('admin.notifications.count');
+
         Route::post('/admin/categories/store',
         [AdminController::class,'storeCategory'])
         ->name('admin.categories.store');
         });
+
+
+        
 
     Route::get('/admin/contacts',[AdminController::class,'contacts'])->name('admin.contacts');
         

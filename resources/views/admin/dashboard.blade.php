@@ -19,25 +19,20 @@
 <p>Total Payments</p>
 </div>
 
-<div class="card bg-white p-4 mt-4">
+<div class="card mt-4 p-4">
+    <h4 class="mb-3">Recent Notifications</h4>
 
-<h4>Recent Notifications</h4>
-
-@forelse($notifications as $note)
-
-<div class="border-bottom py-2">
-<strong>{{ $note->title }}</strong><br>
-{{ $note->message }}
-
-<small class="text-muted d-block">
-{{ $note->created_at->diffForHumans() }}
-</small>
-</div>
-
-@empty
-<p>No notifications yet</p>
-@endforelse
-
+    @forelse($notifications as $note)
+        <div class="notification-item">
+            <strong>{{ $note->title }}</strong>
+            <p class="mb-1">{{ $note->message }}</p>
+            <small class="text-muted">
+                {{ $note->created_at->diffForHumans() }}
+            </small>
+        </div>
+    @empty
+        <p class="text-muted mb-0">No notifications yet.</p>
+    @endforelse
 </div>
 </div>
 

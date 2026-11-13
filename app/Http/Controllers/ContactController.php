@@ -14,48 +14,22 @@ class ContactController extends Controller
     }
 
 
-        public function store(Request $request)
-        {
-            $request->validate([
+       
+public function store(Request $request)
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255',
+        'subject' => 'required|string|max:255',
+        'message' => 'required|string',
+    ]);
 
-                'name' => 'required',
+    \App\Models\Contact::create($validated);
 
-                'email' => 'required|email',
+    return redirect()->route('contact')
+        ->with('success', 'Your message has been sent successfully!');
+}
 
-                'subject' => 'required',
-
-                'message' => 'required'
-
-            ]);
-
-            Contact::create([
-
-                'name' => $request->name,
-
-                'email' => $request->email,
-
-                'subject' => $request->subject,
-
-                'message' => $request->message
-
-            ]);
-
-            Notification::create([
-
-                'title' => 'New Contact Message',
-
-                'message' => $request->name.' sent a message',
-
-                'link' => '/admin/contacts'
-
-            ]);
-
-            return back()
-                ->with(
-                    'success',
-                    'Message Sent Successfully'
-                );
-        }
 
 
 }

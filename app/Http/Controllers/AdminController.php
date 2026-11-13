@@ -53,7 +53,10 @@ class AdminController extends Controller
     {
         $categories = Category::all();
 
-        $courses = Course::where('status','active');
+        $courses = Course::where(function($query) {
+            $query->where('status', 'active')
+                  ->orWhere('status', 'coming_soon');
+        });
 
         if(request()->category)
         {
@@ -75,53 +78,38 @@ class AdminController extends Controller
     }
 
 
-    public function createCourse()
-    {
-        return view('admin.create-course');
-    }
+  
+public function createCourse()
+{
+    $categories = \App\Models\Category::all();
 
-   
+    return view('admin.create-course', compact('categories'));
+}
+
+
 public function storeCourse(Request $request)
 {
-    // ✅ Validation
-
-    $request->validate([
-
-        'category_id' => 'required',
-
-        'title' => 'required',
-
-        'description' => 'required',
-
-        'price' => 'required|numeric',
-
-        'status' => 'required',
-
+    // Validation
+    $validated = $request->validate([
+        'category_id' => 'required|exists:categories,id',
+        'title' => 'required|string|max:255',
+        'description' => 'required|string',
+        'price' => 'required|numeric|min:0',
+        'status' => 'required|in:active,inactive',
         'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
-
     ]);
 
-
-
-    // ✅ Create Course
-
+    // Create Course
     $course = new Course();
 
-    $course->category_id = $request->category_id;
+    $course->category_id = $validated['category_id'];
+    $course->title = $validated['title'];
+    $course->description = $validated['description'];
+    $course->price = $validated['price'];
+    $course->status = $validated['status'];
 
-    $course->title = $request->title;
-
-    $course->description = $request->description;
-
-    $course->price = $request->price;
-
-    $course->status = $request->status;
-
-
-
-    // ✅ Image Upload
-
-    if($request->hasFile('image')){
+    // Image Upload
+    if ($request->hasFile('image')) {
 
         $imageName = time().'_'.$request->image->getClientOriginalName();
 
@@ -130,54 +118,39 @@ public function storeCourse(Request $request)
         $course->image = $imageName;
     }
 
-
-
-    // ✅ Save Course
-
+    // Save Course
     $course->save();
 
+    // Notify only students when course is active
+    if ($course->status == 'active') {
 
-
-    // 🔥 Notify ONLY students
-    // 🔥 ONLY if course is active
-
-    if($course->status == 'active'){
-
-        $students = User::where('role','student')
-            ->pluck('id');
+        $students = User::where('role', 'student')->pluck('id');
 
         $notifications = [];
 
-        foreach($students as $studentId){
+        foreach ($students as $studentId) {
 
             $notifications[] = [
-
                 'user_id' => $studentId,
-
                 'title' => 'New Course Added',
-
                 'message' => $course->title.' is now available',
-
-                'link' => '/course/'.$course->id,
-
+                'link' => route('course.details', $course->id),
+                'is_read' => 0,
                 'created_at' => now(),
-
                 'updated_at' => now()
-
             ];
         }
 
-        // ✅ Bulk Insert
-
-        Notification::insert($notifications);
+        if (!empty($notifications)) {
+            Notification::insert($notifications);
+        }
     }
-
-
 
     return redirect()
         ->route('admin.courses')
-        ->with('success','Course Added Successfully');
+        ->with('success', 'Course Added Successfully!');
 }
+
 
 
 

@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="card bg-white p-4">
+<div class="card p-4">
 
 <h2 class="mb-4">Edit Course</h2>
 

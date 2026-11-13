@@ -1,248 +1,307 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Student Courses</title>
+    <title>@yield('title', 'Student Course Management System')</title>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<style>
-body{
-    background:#f4f6f9;
-}
-.navbar{
-    background:#0d6efd;
-}
-.navbar a{
-    color:#fff !important;
-}
-.card{
-    border:none;
-    border-radius:15px;
-    box-shadow:0 10px 20px rgba(0,0,0,.08);
-}
-footer{
-    background:#111;
-    color:#fff;
-    padding:20px;
-    margin-top:40px;
-}
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
+    <!-- Template Vendor CSS -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet">
 
-.navbar-brand{
-    font-size:1.4rem;
-    font-weight:700;
-}
+    <!-- Academica Main CSS -->
+    <link href="{{ asset('academica/assets/css/main.css') }}" rel="stylesheet">
 
-.nav-link{
-    color:#fff !important;
-    margin-left:10px;
-}
-
-.nav-link:hover{
-    opacity:.8;
-}
-
-@media(max-width:991px){
-
-.navbar-nav{
-    text-align:center;
-    padding-top:15px;
-}
-
-.nav-link{
-    margin-left:0;
-    padding:10px;
-}
-
-}
-.offcanvas{
-    width:280px !important;
-    background: linear-gradient(
-    to bottom,
-    #6EC6FF 0%,
-    #A7E0FF 50%,
-    #FFFFFF 100%
-);
-}
-
-.offcanvas-header{
-    background:#2563eb;
-    color:white;
-}
-
-.offcanvas-body a{
-    text-decoration:none;
-    display:block;
-    padding:5px;
-    color:#111827;
-    /* border-radius:8px; */
-    border-bottom: 1px solid #ddd;
-
-}
-
-.offcanvas-body a:hover{
-    background:#eff6ff;
-}
-
-
-.btn-primary{
-    border-radius:30px;
-    padding:10px 22px;
-    font-weight:600;
-}
-
-.btn-success{
-    border-radius:30px;
-}
-
-.btn-warning{
-    border-radius:30px;
-}
-</style>
+    @stack('styles')
 
 </head>
 
-<body>
+<body class="index-page">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="/"> Student Courses </a>
+    <!-- Header -->
+    <header id="header" class="header d-flex align-items-center fixed-top">
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <div class="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
 
+            <!-- Logo -->
+            <a href="{{ url('/') }}" class="logo d-flex align-items-center me-auto me-xl-0">
+                <h1 class="sitename">Academica</h1>
+            </a>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto align-items-lg-center">
-                <li class="nav-item">
-                    <a href="/" class="nav-link"> Home </a>
-                </li>
+            <!-- Navigation -->
+            <nav id="navmenu" class="navmenu">
 
-                <li class="nav-item">
-                    <a href="/about" class="nav-link"> About </a>
-                </li>
+                <ul>
 
-                <li class="nav-item">
-                    <a href="/courses" class="nav-link"> Courses </a>
-                </li>
+                    <li>
+                        <a href="{{ url('/') }}">Home</a>
+                    </li>
 
-                <li class="nav-item">
-                    <a href="/contact" class="nav-link"> Contact </a>
-                </li>
+                    <li>
+                        <a href="{{ url('/about') }}">About</a>
+                    </li>
 
-                @guest
+                    <li>
+                        <a href="{{ url('/courses') }}">Courses</a>
+                    </li>
 
-                <li class="nav-item">
-                    <a href="/student/login" class="nav-link"> Student Login </a>
-                </li>
+                    <li>
+                        <a href="{{ url('/contact') }}">Contact</a>
+                    </li>
 
-                <li class="nav-item">
-                    <a href="/admin/login" class="nav-link btn"> Admin Login </a>
-                </li>
+                    @guest
 
-                <li class="nav-item">
-                    <a href="/register" class="btn btn-outline-primary "> Register </a>
-                </li>
+                        <li>
+                            <a href="{{ url('/student/login') }}">Student Login</a>
+                        </li>
 
-                @endguest @auth
+                        <!-- <li>
+                            <a href="{{ url('/admin/login') }}">Admin Login</a>
+                        </li> -->
 
-                <li class="nav-item">
-                    <a href="/student/dashboard" class="btn btn-light btn-sm ms-lg-2 mt-2 mt-lg-0"> Dashboard </a>
-                </li>
+                        <li>
+                            <a href="{{ url('/register') }}">Register</a>
+                        </li>
 
-                @endauth
-            </ul>
+                    @endguest
+
+                    @auth
+
+                        <li>
+                            <a href="{{ url('/student/dashboard') }}">Dashboard</a>
+                        </li>
+
+                    @endauth
+
+                </ul>
+
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+
+            </nav>
+
+            <!-- Get Started Button -->
+            @guest
+                <a class="btn-getstarted" href="{{ url('/register') }}">
+                    Get Started
+                </a>
+            @endguest
+
+            @auth
+                <a class="btn-getstarted" href="{{ url('/student/dashboard') }}">
+                    Dashboard
+                </a>
+            @endauth
+
         </div>
-    </div>
-</nav>
 
-<div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenu">
-    <div class="offcanvas-header">
-        <h5>Menu</h5>
-
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-    </div>
-
-    <div class="offcanvas-body">
-        <a href="/" class="d-block mb-3">Home</a>
-
-        <a href="/about" class="d-block mb-3">About</a>
-
-        <a href="/courses" class="d-block mb-3">Courses</a>
-
-        <a href="/contact" class="d-block mb-3">Contact</a>
-
-        @guest
-
-        <a href="/student/login" class="d-block mb-3"> Student Login </a>
-
-        <a href="/admin/login" class="d-block mb-3"> Admin Login </a>
-
-        <a href="/register" class="d-block"> Register </a>
-
-        @endguest @auth
-
-        <a href="/student/dashboard" class="d-block"> Dashboard </a>
-
-        @endauth
-    </div>
-</div>
+    </header>
+    <!-- End Header -->
 
 
+    <!-- Main Content -->
+    <main class="main">
 
-<div class="container py-5">
-@yield('content')
-</div>
+        @yield('content')
 
-<footer class="bg-dark text-white text-center py-4 mt-5">
+    </main>
+    <!-- End Main Content -->
 
-<p class="mb-0">
 
-© 2026 Student Courses.
-All Rights Reserved.
+    <!-- Footer -->
+    <footer id="footer" class="footer accent-background">
 
-</p>
+        <div class="container footer-top">
 
-</footer>
-@if(session('success') || session('error'))
+            <div class="row gy-4">
 
-<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index:9999;">
+                <!-- About -->
+                <div class="col-lg-5 col-md-12 footer-about">
 
-<div id="liveToast"
-class="toast align-items-center text-white border-0
-{{ session('success') ? 'bg-success' : 'bg-danger' }}"
-role="alert">
+                    <a href="{{ url('/') }}" class="logo d-flex align-items-center">
+                        <span class="sitename">Academica</span>
+                    </a>
 
-<div class="d-flex">
+                    <p>
+                        Welcome to Student Course Management System.
+                        Explore courses, improve your skills and
+                        build your future with expert learning.
+                    </p>
 
-<div class="toast-body">
-{{ session('success') ?? session('error') }}
-</div>
+                    <div class="social-links d-flex mt-4">
 
-<button type="button"
-class="btn-close btn-close-white me-2 m-auto"
-data-bs-dismiss="toast"></button>
+                        <a href="#"><i class="bi bi-facebook"></i></a>
 
-</div>
-</div>
-</div>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
 
-@endif
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const toastEl = document.getElementById('liveToast');
-    if (toastEl) {
-        const toast = new bootstrap.Toast(toastEl, {
-            delay: 3000
+                        <a href="#"><i class="bi bi-linkedin"></i></a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Useful Links -->
+                <div class="col-lg-2 col-6 footer-links">
+
+                    <h4>Useful Links</h4>
+
+                    <ul>
+
+                        <li><a href="{{ url('/') }}">Home</a></li>
+
+                        <li><a href="{{ url('/about') }}">About</a></li>
+
+                        <li><a href="{{ url('/courses') }}">Courses</a></li>
+
+                        <li><a href="{{ url('/contact') }}">Contact</a></li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Student Links -->
+                <div class="col-lg-2 col-6 footer-links">
+
+                    <h4>Student Links</h4>
+
+                    <ul>
+
+                        <li><a href="{{ url('/student/login') }}">Student Login</a></li>
+
+                        <li><a href="{{ url('/register') }}">Register</a></li>
+
+                        <li><a href="{{ url('/student/dashboard') }}">Dashboard</a></li>
+
+                    </ul>
+
+                </div>
+
+
+                <!-- Contact -->
+                <div class="col-lg-3 col-md-12 footer-contact">
+
+                    <h4>Contact Us</h4>
+
+                    <p>Student Course Management System</p>
+
+                    <p class="mt-4">
+                        <strong>Email:</strong>
+                        <span>support@example.com</span>
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Copyright -->
+        <div class="container copyright text-center mt-4">
+
+            <p>
+                © 2026
+                <strong class="px-1 sitename">Academica</strong>
+                All Rights Reserved
+            </p>
+
+            <div class="credits">
+                Student Course Management System
+            </div>
+
+        </div>
+
+    </footer>
+    <!-- End Footer -->
+
+
+    <!-- Scroll Top -->
+    <a href="#"
+       id="scroll-top"
+       class="scroll-top d-flex align-items-center justify-content-center">
+
+        <i class="bi bi-arrow-up-short"></i>
+
+    </a>
+
+
+    <!-- Success / Error Toast -->
+    @if(session('success') || session('error'))
+
+        <div class="toast-container position-fixed top-0 end-0 p-3"
+             style="z-index:9999;">
+
+            <div id="liveToast"
+                 class="toast align-items-center text-white border-0
+                 {{ session('success') ? 'bg-success' : 'bg-danger' }}"
+                 role="alert">
+
+                <div class="d-flex">
+
+                    <div class="toast-body">
+                        {{ session('success') ?? session('error') }}
+                    </div>
+
+                    <button type="button"
+                            class="btn-close btn-close-white me-2 m-auto"
+                            data-bs-dismiss="toast">
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    @endif
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Vendor JS -->
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/purecounterjs@1.5.0/dist/purecounter_vanilla.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- Academica Main JS -->
+    <script src="{{ asset('academica/assets/js/main.js') }}"></script>
+
+
+    <!-- Toast Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const toastEl = document.getElementById('liveToast');
+
+            if (toastEl) {
+
+                const toast = new bootstrap.Toast(toastEl, {
+                    delay: 3000
+                });
+
+                toast.show();
+            }
+
         });
-        toast.show();
-    }
-});
-</script>
+    </script>
+
+    @stack('scripts')
+
 </body>
 </html>

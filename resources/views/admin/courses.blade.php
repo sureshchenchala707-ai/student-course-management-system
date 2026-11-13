@@ -9,7 +9,7 @@
 </a>
 <div class="table-responsive">
 
-    <table class="table bg-white table-bordered">
+    <table class="table table-hover">
     <tr>
         <th>Photo</th>
         <th>Title</th>

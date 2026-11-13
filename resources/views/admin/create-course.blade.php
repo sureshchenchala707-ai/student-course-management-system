@@ -11,8 +11,9 @@ $categories = \App\Models\Category::all();
 <h2>Add Course</h2>
 
 <form method="POST"
-action="{{ route('admin.course.store') }}"
-enctype="multipart/form-data">
+      action="{{ route('admin.course.store') }}"
+      enctype="multipart/form-data"
+      id="courseForm">
 
 @csrf
 
@@ -47,7 +48,10 @@ class="form-control">
 <input type="number" name="price" class="form-control mb-3">
 
 <label>Photo</label>
-<input type="file" name="image" class="form-control mb-3">
+<!-- <input type="file" name="image" class="form-control mb-3"> -->
+ <input type="file" name="image" class="form-control mb-3" accept=".jpg, .jpeg, .png, image/jpeg, image/png">
+
+
 
 <label>Status</label>
 <select name="status" class="form-control mb-3">
@@ -71,16 +75,17 @@ Add Course
 @endsection
 
 <script>
+document.addEventListener('DOMContentLoaded', function () {
 
-document.querySelector("form")
-.addEventListener("submit", function(){
+    const form = document.getElementById('courseForm');
+    const btn = document.getElementById('submitBtn');
 
-    let btn = document.getElementById("submitBtn");
-
-    btn.disabled = true;
-
-    btn.innerText = "Please Wait...";
+    if (form && btn) {
+        form.addEventListener('submit', function () {
+            btn.disabled = true;
+            btn.innerHTML = 'Please Wait...';
+        });
+    }
 
 });
-
 </script>

@@ -1,178 +1,634 @@
+
 @extends('layouts.site')
+
+@section('title', 'Courses - Student Courses')
 
 @section('content')
 
-<h2 class="mb-4 text-center">All Courses</h2>
-<form method="GET" action="{{ route('courses') }}" class="mb-4">
-    <div class="input-group">
-        <input
-            type="text"
-            name="search"
-            class="form-control"
-            placeholder="Search Course..."
-            value="{{ request('search') }}"
-        />
+<main class="main courses-page">
 
-        <button class="btn btn-primary">Search</button>
+    <!-- Page Title -->
+    <div class="page-title">
+
+        <div class="heading">
+            <div class="container">
+                <div class="row d-flex justify-content-center text-center">
+                    <div class="col-lg-8">
+
+                        <h1 class="heading-title">Courses</h1>
+
+                        <p class="mb-0">
+                            Explore our professional courses, improve your
+                            technical skills and take the next step towards
+                            your career.
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="breadcrumbs">
+            <div class="container">
+                <ol>
+                    <li><a href="{{ url('/') }}">Home</a></li>
+                    <li class="current">Courses</li>
+                </ol>
+            </div>
+        </nav>
+
     </div>
-</form>
-<!-- <input type="text" id="courseSearch" class="form-control mb-4" placeholder="🔍 Search Courses..."> -->
+    <!-- End Page Title -->
 
 
-<div class="mb-4 d-flex flex-wrap gap-2">
-    <a href="{{ route('courses') }}" class="btn {{ request('category') ? 'btn-outline-primary' : 'btn-primary' }}">
-        All
-    </a>
+    <!-- Courses Section -->
+    <section id="courses-2" class="courses-2 section">
 
-    @foreach($categories as $cat)
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
 
-    <a
-        href="{{ route('courses',['category'=>$cat->id]) }}"
-        class="btn {{ request('category') == $cat->id ? 'btn-primary' : 'btn-outline-secondary' }}"
-    >
-        {{ $cat->name }}
-    </a>
+            <!-- Toolbar -->
+            <div class="toolbar" data-aos="fade-down">
 
-    @endforeach
-</div>
+                <div class="row align-items-center gy-3">
+
+                    <!-- Search -->
+                    <div class="col-lg-6">
+
+                        <div class="search-field">
+                            <i class="bi bi-search"></i>
+
+                            <input
+                                type="text"
+                                id="courseSearch"
+                                placeholder="Find your next course..."
+                            >
+                        </div>
+
+                    </div>
 
 
-<div class="row">
+                    <!-- Category Filter -->
+                    <div class="col-lg-3 col-md-6">
 
-@foreach($courses as $course)
+                        <div class="filter-select">
 
-<div class="col-md-4 mb-4">
+                            <select id="categoryFilter">
 
-<div class="card p-3 h-100 shadow-sm border-0">
+                                <option value="all">All Categories</option>
 
-{{-- Course Image --}}
-@if($course->image)
+                                @foreach($categories as $category)
 
-<img src="{{ asset('uploads/'.$course->image) }}"
-class="img-fluid rounded mb-3"
-style="height:220px; width:100%; object-fit:cover;">
+                                    <option value="{{ $category->id }}">
+                                        {{ $category->name }}
+                                    </option>
 
-@else
+                                @endforeach
 
-<img src="https://via.placeholder.com/400x220?text=No+Image"
-class="img-fluid rounded mb-3">
+                            </select>
 
-@endif
-<span class="badge bg-primary mb-2">
+                        </div>
 
-{{ $course->category->name ?? 'General' }}
+                    </div>
 
-</span>
 
-<h4>{{ $course->title }}</h4>
+                    <!-- Sort -->
+                    <div class="col-lg-3 col-md-6">
 
-<p class="text-muted">
-{{ Str::limit($course->description,80) }}
-</p>
+                        <div class="filter-select">
 
-<h5 class="text-success mb-3">
-₹{{ $course->price }}
-</h5>
+                            <select id="courseSort">
 
-<a href="{{ route('course.details',$course->id) }}"
-class="btn btn-outline-primary w-100 mb-2">
-View Details
-</a>
+                                <option value="default">Sort: Default</option>
+                                <option value="low">Price: Low to High</option>
+                                <option value="high">Price: High to Low</option>
+                                <option value="az">Name: A to Z</option>
+                                <option value="za">Name: Z to A</option>
 
-@auth
+                            </select>
 
-    @php
-        $purchased = \App\Models\Payment::where('user_id', auth()->id())
-            ->where('course_id', $course->id)
-            ->where('status', 'success')
-            ->exists();
-    @endphp
+                        </div>
 
-    @if($purchased)
+                    </div>
 
-        <button class="btn btn-success">
-            ✓ Purchased
-        </button>
+                </div>
 
-    @elseif($course->status == 'active')
+            </div>
+            <!-- End Toolbar -->
 
-        <a href="{{ route('buy.course', $course->id) }}"
-           class="btn btn-primary">
-            Enroll Now
-        </a>
 
-    @elseif($course->status == 'coming_soon')
+            <!-- Filter Tags -->
+            <div class="filter-tags" data-aos="fade-up">
 
-        <button class="btn btn-warning">
-            Coming Soon
-        </button>
+                <button class="tag-btn active category-tag"
+                        data-category="all">
+                    All Courses
+                </button>
 
-    @endif
+                @foreach($categories as $category)
 
-@else
+                    <button class="tag-btn category-tag"
+                            data-category="{{ $category->id }}">
+                        {{ $category->name }}
+                    </button>
 
-    {{-- Guest Users --}}
-    
-    @if($course->status == 'active')
+                @endforeach
 
-        <a href="{{ route('login') }}"
-           class="btn btn-primary">
-            Login to Enroll
-        </a>
+            </div>
+            <!-- End Filter Tags -->
 
-    @elseif($course->status == 'coming_soon')
 
-        <button class="btn btn-warning">
-            Coming Soon
-        </button>
+            <!-- Dynamic Courses Grid -->
+            <div class="row gy-4 gx-4"
+                 id="coursesGrid"
+                 data-aos="fade-up"
+                 data-aos-delay="200">
 
-    @endif
+                @forelse($courses as $course)
 
-@endauth
-</div>
+                    @php
 
-</div>
+                        $purchased = false;
 
-@endforeach
+                        if(auth()->check()) {
 
-@if($courses->count()==0)
+                            $purchased = \App\Models\Payment::where(
+                                'user_id',
+                                auth()->id()
+                            )
+                            ->where('course_id', $course->id)
+                            ->where('status', 'success')
+                            ->exists();
 
-<div class="alert alert-warning">
+                        }
 
-No courses found.
+                        $categoryId = $course->category_id ?? '';
 
-</div>
+                    @endphp
 
-@endif
 
-</div>
+                    <div class="col-xl-4 col-md-6 course-item"
+
+                         data-title="{{ strtolower($course->title) }}"
+
+                         data-category="{{ $categoryId }}"
+
+                         data-price="{{ $course->price }}">
+
+                        <article class="program-card">
+
+                            <!-- Course Image -->
+                            <div class="card-img">
+
+                                @if($course->image)
+
+                                    <img
+                                        src="{{ asset('uploads/'.$course->image) }}"
+                                        alt="{{ $course->title }}"
+                                        class="img-fluid"
+                                        loading="lazy"
+                                    >
+
+                                @else
+
+                                    <img
+                                        src="{{ asset('academica/assets/img/education/courses-3.webp') }}"
+                                        alt="Course"
+                                        class="img-fluid"
+                                        loading="lazy"
+                                    >
+
+                                @endif
+
+
+                                @if($purchased)
+
+                                    <span class="ribbon">
+                                        Purchased
+                                    </span>
+
+                                @elseif($course->status == 'coming_soon')
+
+                                    <span class="ribbon fresh">
+                                        Coming Soon
+                                    </span>
+
+                                @elseif($course->status == 'active')
+
+                                    <span class="ribbon free">
+                                        Available
+                                    </span>
+
+                                @endif
+
+
+                                <span class="cost">
+                                    ₹{{ number_format($course->price, 2) }}
+                                </span>
+
+                            </div>
+
+
+                            <!-- Card Body -->
+                            <div class="card-body">
+
+                                <div class="tags">
+
+                                    <span class="tag-category">
+
+                                        {{ $course->category->name ?? 'General' }}
+
+                                    </span>
+
+                                    <span class="tag-level">
+
+                                        <i class="bi bi-book"></i>
+
+                                        Online Course
+
+                                    </span>
+
+                                </div>
+
+
+                                <h3>{{ $course->title }}</h3>
+
+
+                                <p>
+                                    {{ \Illuminate\Support\Str::limit(
+                                        $course->description,
+                                        110
+                                    ) }}
+                                </p>
+
+
+                                <!-- Course Information -->
+                                <div class="metrics">
+
+                                    <div class="metric-item">
+
+                                        <i class="bi bi-mortarboard"></i>
+
+                                        <span>Online Learning</span>
+
+                                    </div>
+
+                                    <div class="metric-item">
+
+                                        <i class="bi bi-tag"></i>
+
+                                        <span>
+                                            {{ ucfirst($course->status) }}
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Card Footer -->
+                                <div class="card-footer">
+
+                                    <div class="tutor">
+
+                                        <span>
+                                            <i class="bi bi-book-half"></i>
+                                            Student Courses
+                                        </span>
+
+                                    </div>
+
+
+                                    <div class="d-flex flex-column gap-2">
+
+                                        <!-- Purchased -->
+                                        @if($purchased)
+
+                                            <button class="enroll-btn"
+                                                    disabled>
+
+                                                <i class="bi bi-check-circle"></i>
+                                                Purchased
+
+                                            </button>
+
+
+                                        <!-- Active Course -->
+                                        @elseif($course->status == 'active')
+
+                                            @auth
+
+                                                <a href="{{ route('buy.course', $course->id) }}"
+                                                   class="enroll-btn">
+
+                                                    Enroll Now
+                                                    <i class="bi bi-arrow-right"></i>
+
+                                                </a>
+
+                                            @else
+
+                                                <a href="{{ route('student.login') }}"
+                                                   class="enroll-btn">
+
+                                                    Login to Enroll
+                                                    <i class="bi bi-arrow-right"></i>
+
+                                                </a>
+
+                                            @endauth
+
+
+                                        <!-- Coming Soon -->
+                                        @elseif($course->status == 'coming_soon')
+
+                                            <button class="enroll-btn" disabled>
+
+                                                Coming Soon
+
+                                            </button>
+
+                                        @endif
+
+
+                                        <!-- Course Details -->
+                                        <a href="{{ route('course.details', $course->id) }}"
+                                           class="btn btn-outline-success btn-sm">
+
+                                            View Details
+
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    </div>
+
+                @empty
+
+                    <div class="col-12 text-center">
+
+                        <h4>No Courses Available</h4>
+
+                        <p>New courses will be added soon.</p>
+
+                    </div>
+
+                @endforelse
+
+            </div>
+            <!-- End Courses Grid -->
+
+
+            <!-- No Search Results -->
+            <div id="noCourses" class="text-center mt-5"
+                 style="display:none;">
+
+                <h4>No matching courses found.</h4>
+
+                <p>Try another search or category.</p>
+
+            </div>
+
+
+            <!-- Load More -->
+            <div class="load-more-wrapper"
+                 id="loadMoreWrapper"
+                 data-aos="zoom-in">
+
+                <button type="button"
+                        id="loadMoreBtn"
+                        class="load-more-btn">
+
+                    Load More Courses
+                    <i class="bi bi-arrow-down-circle"></i>
+
+                </button>
+
+                <p class="results-count" id="resultsCount"></p>
+
+            </div>
+
+        </div>
+
+    </section>
+    <!-- End Courses Section -->
+
+</main>
+
+
+<!-- Search, Filter and Sorting -->
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput = document.getElementById('courseSearch');
+
+    const categoryFilter = document.getElementById('categoryFilter');
+
+    const sortSelect = document.getElementById('courseSort');
+
+    const grid = document.getElementById('coursesGrid');
+
+    const noCourses = document.getElementById('noCourses');
+
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+
+    const loadMoreWrapper = document.getElementById('loadMoreWrapper');
+
+    const resultsCount = document.getElementById('resultsCount');
+
+    const tags = document.querySelectorAll('.category-tag');
+
+    let visibleLimit = 6;
+
+    let filteredCourses = [];
+
+
+    function filterCourses() {
+
+        const search = searchInput.value.toLowerCase();
+
+        const category = categoryFilter.value;
+
+        const sort = sortSelect.value;
+
+        const items = Array.from(
+            grid.querySelectorAll('.course-item')
+        );
+
+
+        filteredCourses = items.filter(item => {
+
+            const title = item.dataset.title;
+
+            const itemCategory = item.dataset.category;
+
+            const matchesSearch = title.includes(search);
+
+            const matchesCategory =
+                category === 'all' || itemCategory === category;
+
+            return matchesSearch && matchesCategory;
+
+        });
+
+
+        // Sorting
+        if(sort === 'low') {
+
+            filteredCourses.sort((a,b) =>
+                Number(a.dataset.price) - Number(b.dataset.price)
+            );
+
+        }
+
+        else if(sort === 'high') {
+
+            filteredCourses.sort((a,b) =>
+                Number(b.dataset.price) - Number(a.dataset.price)
+            );
+
+        }
+
+        else if(sort === 'az') {
+
+            filteredCourses.sort((a,b) =>
+                a.dataset.title.localeCompare(b.dataset.title)
+            );
+
+        }
+
+        else if(sort === 'za') {
+
+            filteredCourses.sort((a,b) =>
+                b.dataset.title.localeCompare(a.dataset.title)
+            );
+
+        }
+
+
+        // Hide all courses first
+        items.forEach(item => {
+
+            item.style.display = 'none';
+
+        });
+
+
+        // Display filtered courses
+        filteredCourses.forEach((item,index) => {
+
+            if(index < visibleLimit) {
+
+                item.style.display = '';
+
+                grid.appendChild(item);
+
+            }
+
+        });
+
+
+        // Empty result
+        noCourses.style.display =
+            filteredCourses.length === 0 ? 'block' : 'none';
+
+
+        // Load More
+        loadMoreWrapper.style.display =
+            filteredCourses.length > visibleLimit ? 'block' : 'none';
+
+
+        loadMoreBtn.style.display =
+            filteredCourses.length > visibleLimit ? 'inline-block' : 'none';
+
+
+        // Count
+        resultsCount.innerText =
+            'Showing ' +
+            Math.min(visibleLimit, filteredCourses.length) +
+            ' of ' + filteredCourses.length + ' courses';
+
+    }
+
+
+    // Search
+    searchInput.addEventListener('input', function () {
+
+        visibleLimit = 6;
+
+        filterCourses();
+
+    });
+
+
+    // Category dropdown
+    categoryFilter.addEventListener('change', function () {
+
+        visibleLimit = 6;
+
+        tags.forEach(tag => {
+
+            tag.classList.toggle(
+                'active',
+                tag.dataset.category === categoryFilter.value
+            );
+
+        });
+
+        filterCourses();
+
+    });
+
+
+    // Sorting
+    sortSelect.addEventListener('change', function () {
+
+        filterCourses();
+
+    });
+
+
+    // Category buttons
+    tags.forEach(tag => {
+
+        tag.addEventListener('click', function () {
+
+            tags.forEach(t => t.classList.remove('active'));
+
+            this.classList.add('active');
+
+            categoryFilter.value = this.dataset.category;
+
+            visibleLimit = 6;
+
+            filterCourses();
+
+        });
+
+    });
+
+
+    // Load More
+    loadMoreBtn.addEventListener('click', function () {
+
+        visibleLimit += 6;
+
+        filterCourses();
+
+    });
+
+
+    // Initial Load
+    filterCourses();
+
+});
+
+</script>
 
 @endsection
-<style>
-    
-.course-card{
-    border:none;
-    border-radius:20px;
-    overflow:hidden;
-    transition:.3s;
-    box-shadow:0 10px 25px rgba(0,0,0,.08);
-}
-
-.course-card:hover{
-    transform:translateY(-8px);
-    box-shadow:0 15px 35px rgba(0,0,0,.15);
-}
-
-.course-card img{
-    height:220px;
-    object-fit:cover;
-}
-
-.course-card .price{
-    color:#2563eb;
-    font-size:24px;
-    font-weight:700;
-}
-
-
-</style>

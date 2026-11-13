@@ -27,10 +27,13 @@ class AuthController extends Controller
             'role'=>'admin'
         ]))
         {
-            return redirect('/admin/dashboard');
+            // Successful login
+            return redirect()->route('admin.dashboard')
+                ->with('success', 'Admin login successful!');
         }
 
-        return back()->with('error','Invalid Admin Login');
+        // Invalid credentials
+        return back()->with('error', 'Invalid admin email or password.');
     }
 
     public function studentLogin(Request $request)
