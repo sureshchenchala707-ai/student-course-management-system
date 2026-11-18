@@ -32,33 +32,28 @@ Course Details Page
 Notification System
 Responsive User Interface
 🖥️ Screenshots
-Home Page
 
-!Home Page
 
-Student Login
+### Home Page
+![Home Page](./screenshots/home.png)
 
-!Student Login
+### Courses Page
+![Courses Page](./screenshots/courses.png)
 
-Student Registration
+### Course Details
+![Course Details](./screenshots/course-details.png)
 
-!Student Registration
+### Student Dashboard
+![Student Dashboard](./screenshots/student-dashboard.png)
 
-Courses
+### Admin Dashboard
+![Admin Dashboard](./screenshots/admin-dashboard.png)
 
-!Courses
+### Manage Courses
+![Manage Courses](./screenshots/manage-courses.png)
 
-Student Dashboard
 
-!Student Dashboard
 
-Admin Dashboard
-
-!Admin Dashboard
-
-Manage Courses
-
-!Manage Courses
 
 🛠️ Technologies Used
 Technology	Purpose
